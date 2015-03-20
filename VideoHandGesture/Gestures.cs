@@ -19,7 +19,7 @@ namespace VideoHandGesture
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-
+            Camera cam = new Camera();
         }
     }
 }
