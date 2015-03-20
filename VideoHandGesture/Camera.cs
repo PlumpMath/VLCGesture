@@ -71,6 +71,11 @@ namespace VideoHandGesture
             this._mngr.StreamFrames(false);
         }
 
+        public void Stop()
+        {
+            this._mngr.Close();
+        }
+
         private pxcmStatus onModuleProcessedFrame(int mid, PXCMBase module, PXCMCapture.Sample sample)
         {
             if (mid == PXCMHandModule.CUID)
