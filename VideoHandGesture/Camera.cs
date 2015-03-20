@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace VideoHandGesture
         private PXCMHandModule _hand;
         private PXCMHandData _handData;
 
-        public Camera()
+        public Camera(params PXCMHandConfiguration.OnFiredGestureDelegate[] dlgts)
         {
             // Create the manager
             this._session = PXCMSession.CreateInstance();
@@ -36,11 +37,26 @@ namespace VideoHandGesture
             this._mngr.EnableHand();
             this._hand = this._mngr.QueryHand();
             this._handData = this._hand.CreateOutput();
+
+            // Hands config
             PXCMHandConfiguration conf = this._hand.CreateActiveConfiguration();
-            conf.EnableGesture("spreadfingers", false);
-            conf.EnableGesture("thumb-up", false);
-            conf.SubscribeGesture(this.onFiredGesture);
+            conf.EnableGesture("spreadfingers", true);
+            conf.EnableGesture("thumb_up", true);
+
+            // Subscribe hands alerts
+            conf.EnableAllAlerts();
             conf.SubscribeAlert(this.onFiredAlert);
+
+            // Subscribe all gestures
+            foreach (PXCMHandConfiguration.OnFiredGestureDelegate subscriber in dlgts)
+            {
+                conf.SubscribeGesture(subscriber);
+            }
+
+            // and the private one for debug
+            conf.SubscribeGesture(this.onFiredGesture);
+
+            // Apply it all
             conf.ApplyChanges();
 
             // Set events
@@ -67,12 +83,12 @@ namespace VideoHandGesture
 
         private void onFiredGesture(PXCMHandData.GestureData gestureData)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("GESTURE::!!:: " + gestureData.name);
         }
 
         private void onFiredAlert(PXCMHandData.AlertData alertData)
         {
-            throw new NotImplementedException();
+           // Debug.WriteLine("ALERT: " + alertData.label.ToString());
         }
 
         ~Camera()
