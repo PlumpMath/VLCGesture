@@ -21,10 +21,12 @@ namespace VideoHandGesture
 
         public Camera _camera;
         public Process WorkingProcess { get; set; }
+        public bool isPlaying { get; set; }
 
         public Gestures()
         {
             InitializeComponent();
+            this.isPlaying = true;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -62,15 +64,25 @@ namespace VideoHandGesture
 
         private void onFiredGesture(PXCMHandData.GestureData gestureData)
         {
-            if (gestureData.name.CompareTo("spreadfingers") == 0)
+            if (gestureData.name.CompareTo("spreadfingers") == 0 && this.isPlaying)
             {
                 this.BackColor = Color.Red;
+                this.TogglePlay();
             }
 
-            if (gestureData.name.CompareTo("thumb_up") == 0)
+            if (gestureData.name.CompareTo("thumb_up") == 0 && !this.isPlaying)
             {
                 this.BackColor = Color.Green;
+                this.TogglePlay();
             }
+        }
+
+        private void TogglePlay()
+        {
+            this.isPlaying = !this.isPlaying;
+            IntPtr p = this.WorkingProcess.MainWindowHandle;
+            ShowWindow(p, 1);
+            SendKeys.SendWait(" ");
         }
     }
 }

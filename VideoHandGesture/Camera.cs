@@ -40,8 +40,8 @@ namespace VideoHandGesture
 
             // Hands config
             PXCMHandConfiguration conf = this._hand.CreateActiveConfiguration();
-            conf.EnableGesture("spreadfingers", true);
-            conf.EnableGesture("thumb_up", true);
+            conf.EnableGesture("spreadfingers", false);
+            conf.EnableGesture("thumb_up", false);
 
             // Subscribe hands alerts
             conf.EnableAllAlerts();
